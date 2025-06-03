@@ -1,0 +1,42 @@
+# --- Node.js ---
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# --- Logs ---
+logs/
+*.log
+*.log.*
+
+# --- Environment Variables ---
+.env
+.env.local
+.env.*.local
+
+# --- OS Files ---
+.DS_Store
+Thumbs.db
+
+# --- Frontend (React) ---
+client/build/
+client/.next/
+client/.parcel-cache/
+client/.turbo/
+
+# --- Backend ---
+server/dist/
+server/*.pem
+server/node_modules/
+# --- Editor folders ---
+.idea/
+.vscode/
+*.swp
+
+# --- Coverage / Testing ---
+coverage/
+*.lcov
+
+# --- MongoDB dumps (if any) ---
+dump/
