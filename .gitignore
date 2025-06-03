@@ -5,6 +5,24 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 
+# Next.js build folder
+client/.next/
+
+# Dependencies
+client/node_modules/
+
+# Env files
+client/.env
+client/.env.local
+
+# Logs
+client/logs/
+client/*.log
+
+# Cache
+client/.turbo/
+client/.vercel/
+
 # --- Logs ---
 logs/
 *.log
