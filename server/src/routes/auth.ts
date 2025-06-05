@@ -1,8 +1,9 @@
 import { Router, Request, Response } from "express";
+import { AuthRequest } from "../middleware/auth";
 import User from "../models/User";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-
+import { verifyToken } from "../middleware/auth";
 const router = Router();
 
 // GET /api/auth
@@ -17,7 +18,9 @@ router.post("/register", async (req: Request, res: Response) => {
     const { username, password, roles } = req.body;
 
     if (!username || !password) {
-      return res.status(400).json({ message: "Username and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Username and password are required" });
     }
 
     if (await User.findOne({ username })) {
@@ -25,7 +28,9 @@ router.post("/register", async (req: Request, res: Response) => {
     }
 
     if (password.length < 6) {
-      return res.status(400).json({ message: "Password must be at least 6 characters long" });
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 6 characters long" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -60,17 +65,36 @@ router.post("/login", async (req: Request, res: Response) => {
       return res.status(400).json({ message: "Invalid username or password" });
     }
 
+    const secret = process.env.JWT_SECRET;
+    if (!secret) {
+      throw new Error("JWT_SECRET not set in environment");
+    }
     const token = jwt.sign(
       { userId: user._id, roles: user.roles },
-      process.env.JWT_SECRET as string,
+      secret as string,
       { expiresIn: "1h" }
     );
 
-    res.json({ token });
+    res.json({
+      token,
+      user: {
+        id: user._id,
+        username: user.username,
+        roles: user.roles,
+      },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Error logging in user" });
   }
 });
+router.get("/me", verifyToken, (req: AuthRequest, res: Response) => {
+  const { userId, roles } = req.user!;
+  User.findById(userId).select("username roles").then(user => {
+    if (!user) return res.status(404).json({ message: "User not found" });
+    res.json({ username: user.username, roles: user.roles });
+  }).catch(() => res.status(500).json({ message: "Error retrieving user data" }));
+});
+
 
 export default router;
