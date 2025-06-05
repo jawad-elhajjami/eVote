@@ -2,6 +2,7 @@ import React from "react";
 import { Vote } from "lucide-react";
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
   return (
     <footer className="border-t border-white/10 py-8 px-4">
       <div className="container mx-auto">
@@ -13,7 +14,7 @@ const Footer = () => {
             <span className="text-white font-semibold">eVote</span>
           </div>
           <p className="text-gray-400 text-sm">
-            © 2024 eVote - Secure Digital Voting Platform. Academic Project.
+            © {currentYear} eVote - Secure Digital Voting Platform. Academic Project.
           </p>
         </div>
       </div>
