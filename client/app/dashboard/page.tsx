@@ -1,19 +1,19 @@
-"use client"
+"use client";
 
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Loader2,
   ShieldCheck,
   User,
   LogOut,
   Menu,
-  UserCircle
-} from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { useProtectedRoute } from "@/app/utils/withAuth"
-import { useAuth } from "@/app/context/AuthContext"
+  UserCircle,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useProtectedRoute } from "@/app/utils/withAuth";
+import { useAuth } from "@/app/context/AuthContext";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -21,61 +21,87 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { toast } from "sonner" 
+} from "@/components/ui/dropdown-menu";
+import { toast } from "sonner";
 
 interface UserData {
-  username: string
-  roles: string[]
+  id?: string;
+  username: string;
+  roles: string[];
 }
 
 export default function DashboardPage() {
-  useProtectedRoute()
+  const [publicKey, setPublicKey] = useState("");
+  useProtectedRoute();
 
-  const { logout } = useAuth()
-  const [user, setUser] = useState<UserData | null>(null)
-  const [loading, setLoading] = useState(true)
-  const router = useRouter()
+  const { logout } = useAuth();
+  const [user, setUser] = useState<UserData | null>(null);
+  const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
-    const token = localStorage.getItem("token") || sessionStorage.getItem("token")
+    const token =
+      localStorage.getItem("token") || sessionStorage.getItem("token");
 
     if (!token) {
-      router.push("/login")
-      return
+      router.push("/login");
+      return;
     }
 
     const fetchUser = async () => {
       try {
         const res = await fetch("http://localhost:3001/api/auth/me", {
           headers: { Authorization: `Bearer ${token}` },
-        })
+        });
 
-        if (!res.ok) throw new Error("Unauthorized")
+        if (!res.ok) throw new Error("Unauthorized");
 
-        const data = await res.json()
-        setUser({ username: data.username, roles: data.roles })
+        const data = await res.json();
+        setUser({
+          id: data.id || data._id,
+          username: data.username,
+          roles: data.roles,
+        });
       } catch (err) {
-        router.push("/login")
+        router.push("/login");
       } finally {
-        setLoading(false)
+        setLoading(false);
       }
-    }
+    };
 
-    fetchUser()
-  }, [router])
+    fetchUser();
+  }, [router]);
+
+  useEffect(() => {
+    const fetchPublicKey = async () => {
+      if (user && user.id) {
+        try {
+          const res = await fetch(
+            `http://localhost:3001/api/users/${user.id}/public-key`
+          );
+          const data = await res.json();
+          if (res.ok) setPublicKey(data.publicKey || "No public key found.");
+          else console.error("Error:", data.message);
+        } catch (error) {
+          console.error("Failed to fetch public key", error);
+        }
+      }
+    };
+
+    fetchPublicKey();
+  }, [user]);
 
   const handleLogout = () => {
-    logout()
-    toast.success("You have been successfully logged out.")
-  }
+    logout();
+    toast.success("You have been successfully logged out.");
+  };
 
   if (loading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-white" />
       </div>
-    )
+    );
   }
 
   return (
@@ -86,7 +112,10 @@ export default function DashboardPage() {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex items-center gap-2 text-white">
+            <Button
+              variant="ghost"
+              className="flex items-center gap-2 text-white"
+            >
               <UserCircle className="w-5 h-5" />
               {user?.username}
               <Menu className="w-4 h-4 ml-1" />
@@ -95,10 +124,14 @@ export default function DashboardPage() {
           <DropdownMenuContent className="bg-slate-800 border-white/10 text-white">
             <DropdownMenuLabel>Account</DropdownMenuLabel>
             <DropdownMenuItem disabled>
-              Role: <span className="ml-1 italic">{user?.roles.join(", ")}</span>
+              Role:{" "}
+              <span className="ml-1 italic">{user?.roles.join(", ")}</span>
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="text-red-400 hover:text-red-500">
+            <DropdownMenuItem
+              onClick={handleLogout}
+              className="text-red-400 hover:text-red-500"
+            >
               <LogOut className="w-4 h-4 mr-2" />
               Logout
             </DropdownMenuItem>
@@ -116,8 +149,19 @@ export default function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-gray-300">
-            <p>This dashboard is part of the <strong>Cryptography & Blockchain</strong> module.</p>
-            <p>Your account roles: <code>{user?.roles.join(", ")}</code></p>
+            <p>
+              This dashboard is part of the{" "}
+              <strong>Cryptography & Blockchain</strong> module.
+            </p>
+            <p>
+              Your account roles: <code>{user?.roles.join(", ")}</code>
+            </p>
+            <div className="mt-4">
+              <h2 className="text-lg font-semibold mb-2">Your Public Key:</h2>
+              <pre className="bg-gray-800 p-4 rounded text-sm overflow-auto max-w-full">
+                {publicKey || "No public key found."}
+              </pre>
+            </div>
           </CardContent>
         </Card>
 
@@ -129,10 +173,13 @@ export default function DashboardPage() {
             </CardTitle>
           </CardHeader>
           <CardContent className="text-gray-300">
-            <p>Explore zero-knowledge voting, end-to-end encryption, and verifiable election results in future updates.</p>
+            <p>
+              Explore zero-knowledge voting, end-to-end encryption, and
+              verifiable election results in future updates.
+            </p>
           </CardContent>
         </Card>
       </div>
     </div>
-  )
+  );
 }

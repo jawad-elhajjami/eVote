@@ -95,7 +95,7 @@ router.get("/me", verifyToken, (req: AuthRequest, res: Response) => {
   const { userId, roles } = req.user!;
   User.findById(userId).select("username roles").then(user => {
     if (!user) return res.status(404).json({ message: "User not found" });
-    res.json({ username: user.username, roles: user.roles });
+    res.json({ id:user.id, username: user.username, roles: user.roles });
   }).catch(() => res.status(500).json({ message: "Error retrieving user data" }));
 });
 
