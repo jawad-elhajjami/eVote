@@ -4,6 +4,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth";
 import voteRoutes from "./routes/vote";
+import userRoutes from "./routes/user"
 
 // Load environment variables
 dotenv.config();
@@ -18,6 +19,7 @@ app.use(express.json());
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/vote", voteRoutes);
+app.use("/api/users", userRoutes)
 
 
 // MongoDB Connection

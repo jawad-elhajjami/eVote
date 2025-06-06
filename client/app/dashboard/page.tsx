@@ -81,7 +81,7 @@ export default function DashboardPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 text-white">
       {/* Header with Dropdown Menu */}
-      <div className="flex justify-between items-center mb-6">
+      <div className="flex justify-between items-center mb-6 max-w-7xl mx-auto">
         <h1 className="text-3xl font-bold">eVote Dashboard</h1>
 
         <DropdownMenu>
@@ -107,7 +107,7 @@ export default function DashboardPage() {
       </div>
 
       {/* Content */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-7xl mx-auto">
         <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
           <CardHeader>
             <CardTitle className="flex items-center gap-2 text-white">

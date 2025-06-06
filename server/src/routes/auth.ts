@@ -88,6 +88,9 @@ router.post("/login", async (req: Request, res: Response) => {
     res.status(500).json({ message: "Error logging in user" });
   }
 });
+
+
+// GET route to get current user data
 router.get("/me", verifyToken, (req: AuthRequest, res: Response) => {
   const { userId, roles } = req.user!;
   User.findById(userId).select("username roles").then(user => {

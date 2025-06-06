@@ -37,6 +37,8 @@ import Header from "@/components/Header";
 import { useAuth } from "../context/AuthContext";
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { generateRSAKeyPair, exportKeyToPEM } from "@/lib/crypto";
+
 interface SignupFormData {
   username: string;
   password: string;
@@ -45,11 +47,33 @@ interface SignupFormData {
   agreeToTerms: boolean;
 }
 
-interface SignupResponse {
-  id: string;
-  username: string;
-  roles: string[];
-  dateCreated: string;
+// interface SignupResponse {
+//   id: string;
+//   username: string;
+//   roles: string[];
+//   dateCreated: string;
+// }
+
+async function handlePostSignup(userId: string) {
+  const keyPair = await generateRSAKeyPair();
+  const publicKeyPEM = await exportKeyToPEM(keyPair.publicKey, "public");
+  const privateKeyPEM = await exportKeyToPEM(keyPair.privateKey, "private");
+
+  // Send public key to backend
+  await fetch(`http://localhost:3001/api/users/${userId}/public-key`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ publicKey: publicKeyPEM }),
+  });
+
+  // Trigger download of private key
+  const blob = new Blob([privateKeyPEM], { type: "application/x-pem-file" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "private_key.pem";
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 export default function SignupPage() {
@@ -128,9 +152,7 @@ export default function SignupPage() {
     try {
       const response = await fetch("http://localhost:3001/api/auth/register", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           username: formData.username,
           password: formData.password,
@@ -139,22 +161,19 @@ export default function SignupPage() {
       });
 
       const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Registration failed");
 
-      if (!response.ok) {
-        throw new Error(data.message || "Registration failed");
-      }
+      await handlePostSignup(data.id); //
 
       setSuccess(true);
-      // Reset form
       setFormData({
         username: "",
         password: "",
         confirmPassword: "",
-        roles: ["user"],
+        roles: ["voter"],
         agreeToTerms: false,
       });
 
-      // Redirect to login after 2 seconds
       setTimeout(() => {
         window.location.href = "/login";
       }, 2000);
@@ -318,22 +337,17 @@ export default function SignupPage() {
                   </SelectTrigger>
                   <SelectContent className="bg-slate-800 border-white/20 w-full">
                     <SelectItem
-                      value="user"
+                      value="voter"
                       className="text-white hover:bg-white/10"
+                      defaultChecked
                     >
-                      Student
+                      Voter
                     </SelectItem>
                     <SelectItem
-                      value="admin"
+                      value="pollster"
                       className="text-white hover:bg-white/10"
                     >
-                      Administrator
-                    </SelectItem>
-                    <SelectItem
-                      value="moderator"
-                      className="text-white hover:bg-white/10"
-                    >
-                      Moderator
+                      Pollster
                     </SelectItem>
                   </SelectContent>
                 </Select>
