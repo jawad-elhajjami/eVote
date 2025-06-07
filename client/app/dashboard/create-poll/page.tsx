@@ -4,19 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Loader2,
-  UserCircle,
-  Menu,
-  LogOut,
   Plus,
 } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -119,80 +108,58 @@ export default function CreatePollPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 p-6 text-white">
+    <div className="min-h-screen p-6 text-black">
       {/* Header with Dropdown */}
-      <div className="flex justify-between items-center mb-6 max-w-7xl mx-auto">
+      <div className="flex justify-between mb-6 mx-auto">
         <h1 className="text-3xl font-bold">Create a New Poll</h1>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="flex items-center gap-2 text-white">
-              <UserCircle className="w-5 h-5" />
-              {user?.username}
-              <Menu className="w-4 h-4 ml-1" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="bg-slate-800 border-white/10 text-white">
-            <DropdownMenuLabel>Account</DropdownMenuLabel>
-            <DropdownMenuItem disabled>
-              Role: <span className="ml-1 italic">{user?.roles.join(", ")}</span>
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem
-              onClick={handleLogout}
-              className="text-red-400 hover:text-red-500"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+        
       </div>
 
       {/* Poll Form */}
-      <div className="max-w-3xl mx-auto">
-        <Card className="bg-white/5 border-white/10 backdrop-blur-sm">
+      <div className="mx-auto w-full">
+        <Card className="bg-white/5 border-black/10 backdrop-blur-sm">
           <CardHeader>
-            <CardTitle className="text-white">Poll Details</CardTitle>
+            <CardTitle className="text-black">Poll Details</CardTitle>
           </CardHeader>
           <CardContent>
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label className="text-white mb-4">Title</Label>
+                <Label className="text-black mb-4">Title</Label>
                 <Input
                   value={title}
                   onChange={(e) => setTitle(e.target.value)}
-                  className="bg-white/10 border-white/20 text-white"
+                  className="bg-white/10 border-black/20"
                   required
                 />
               </div>
 
               <div>
-                <Label className="text-white mb-4">Description</Label>
+                <Label className="text-black mb-4">Description</Label>
                 <Input
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="bg-white/10 border-white/20 text-white"
+                  className="bg-white/10 border-black/20"
                 />
               </div>
 
               <div>
-                <Label className="text-white mb-4">Deadline</Label>
+                <Label className="text-black mb-4">Deadline</Label>
                 <Input
                   type="datetime-local"
                   value={deadline}
                   onChange={(e) => setDeadline(e.target.value)}
-                  className="bg-white/10 border-white/20 text-white"
+                  className="bg-white/10 border-black/20"
                 />
               </div>
 
               <div>
-                <Label className="text-white mb-4">Options</Label>
+                <Label className="text-black mb-4">Options</Label>
                 {options.map((opt, index) => (
                   <div key={index} className="flex gap-2 items-center mt-2">
                     <Input
                       value={opt}
                       onChange={(e) => handleOptionChange(index, e.target.value)}
-                      className="bg-white/10 border-white/20 text-white flex-1"
+                      className="bg-white/10 border-black/20 text-black flex-1"
                       required
                     />
                     {options.length > 2 && (
