@@ -37,6 +37,10 @@ export default function CreatePollPage() {
   const [options, setOptions] = useState(["", ""]);
   const router = useRouter();
 
+
+  // TODO: prevent voters from accessing this page
+  // TODO: clean code, create a layout
+  
   useEffect(() => {
     const token = localStorage.getItem("token") || sessionStorage.getItem("token");
 
@@ -59,7 +63,6 @@ export default function CreatePollPage() {
         setLoading(false);
       }
     };
-
     fetchUser();
   }, [router]);
 
