@@ -78,7 +78,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
       <SidebarProvider>
         <div className="flex min-h-screen min-w-full text-white">
           <AppSidebar />
-          <main className="p-6 w-full">
+          <main className="p-6 w-full bg-gray-100">
             <SidebarTrigger />
             {children}
           </main>
