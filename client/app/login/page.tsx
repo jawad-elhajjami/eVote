@@ -26,16 +26,6 @@ import { useRouter } from "next/navigation";
 interface LoginFormData {
   username: string;
   password: string;
-  rememberMe: boolean;
-}
-
-interface LoginResponse {
-  token: string;
-  user: {
-    id: string;
-    username: string;
-    roles: string[];
-  };
 }
 
 export default function LoginPage() {
@@ -53,7 +43,6 @@ export default function LoginPage() {
   const [formData, setFormData] = useState<LoginFormData>({
     username: "",
     password: "",
-    rememberMe: false,
   });
   const [errors, setErrors] = useState<Partial<LoginFormData>>({});
   const [isLoading, setIsLoading] = useState(false);
@@ -99,7 +88,7 @@ export default function LoginPage() {
         throw new Error(data.message || "Login failed");
       }
 
-      login(data.token, formData.rememberMe);
+      login(data.token);
     } catch (error) {
       setApiError(
         error instanceof Error
@@ -228,19 +217,6 @@ export default function LoginPage() {
                 )}
               </div>
 
-              <div className="flex items-center space-x-2">
-                <Checkbox
-                  id="remember"
-                  checked={formData.rememberMe}
-                  onCheckedChange={(checked) =>
-                    handleInputChange("rememberMe", checked as boolean)
-                  }
-                  disabled={isLoading}
-                />
-                <Label htmlFor="remember" className="text-sm text-gray-300">
-                  Remember me for 30 days
-                </Label>
-              </div>
 
               <Button
                 type="submit"

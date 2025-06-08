@@ -11,6 +11,7 @@ import { useProtectedRoute } from "@/app/utils/withAuth";
 import { toast } from "sonner";
 
 export default function CreatePollPage() {
+  
   useProtectedRoute();
 
   const [title, setTitle] = useState("");
@@ -53,20 +54,20 @@ export default function CreatePollPage() {
   };
 
   return (
-    <div className="mt-8">
+    <div className="mt-8 bg-white border-black/10 shadow-none rounded-lg p-6">
       <h1 className="text-3xl font-bold text-black mb-6">Create a New Poll</h1>
-      <Card className="bg-white max-w-4xl border-white/10 backdrop-blur-sm">
-        <CardHeader>
+      <Card className="max-w-2xl shadow-none border-0">
+        <CardHeader className="p-0">
           <CardTitle className="text-black">Poll Details</CardTitle>
         </CardHeader>
-        <CardContent>
+        <CardContent className="p-0">
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <Label className="text-black mb-4">Title</Label>
               <Input
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="bg-white/10 border-black/15 text-black"
+                className="bg-gray-300/10 border-black/15 text-black"
                 required
               />
             </div>
@@ -75,7 +76,7 @@ export default function CreatePollPage() {
               <Input
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="bg-white/10 border-black/15 text-black"
+                className="bg-gray-300/10 border-black/15 text-black"
               />
             </div>
             <div>
@@ -84,7 +85,7 @@ export default function CreatePollPage() {
                 type="datetime-local"
                 value={deadline}
                 onChange={(e) => setDeadline(e.target.value)}
-                className="bg-white/10 border-black/15 text-black"
+                className="bg-gray-300/10 border-black/15 text-black"
               />
             </div>
             <div>
@@ -94,7 +95,7 @@ export default function CreatePollPage() {
                   <Input
                     value={opt}
                     onChange={(e) => handleOptionChange(index, e.target.value)}
-                    className="bg-white/10 border-black/15 text-black flex-1"
+                    className="bg-gray-300/10 border-black/15 text-black flex-1"
                     required
                   />
                   {options.length > 2 && (

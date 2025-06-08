@@ -169,14 +169,14 @@ const Dashboard = () => {
       </div>
 
       {/* Security Tips */}
-      <div className="mt-8 bg-blue-50 border border-blue-100 rounded-lg p-4">
+      <div className="mt-8 bg-green-100 border border-green-300 rounded-lg p-4">
         <div className="flex items-start">
-          <div className="p-2 bg-blue-100 rounded-lg">
-            <Lock className="h-5 w-5 text-blue-600" />
+          <div className="p-2 bg-green-200 rounded-lg">
+            <Lock className="h-5 w-5 text-green-600" />
           </div>
           <div className="ml-4">
-            <h5 className="font-medium text-gray-800">Security Tip</h5>
-            <p className="text-sm text-gray-600 mt-1">
+            <h5 className="font-medium text-green-800">Security Tip</h5>
+            <p className="text-sm text-green-800 mt-1">
               Remember to keep your private key secure and never share it with anyone. Your votes are cryptographically
               signed and verified using your key pair.
             </p>
