@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth";
 import voteRoutes from "./routes/vote";
 import userRoutes from "./routes/user"
 import pollRoutes from "./routes/polls"
+import settingsRoutes from "./routes/settings"
 
 // Load environment variables
 dotenv.config();
@@ -22,6 +23,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/vote", voteRoutes);
 app.use("/api/users", userRoutes)
 app.use("/api/polls", pollRoutes)
+app.use("/api/settings", settingsRoutes)
 
 
 // MongoDB Connection

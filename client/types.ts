@@ -24,3 +24,9 @@ interface LoginResponse {
     roles: string[];
   };
 }
+interface CryptographySettings {
+  keyPairGenerated: boolean
+  publicKey: string
+  keyStrength: string
+  lastKeyRotation: string
+}
