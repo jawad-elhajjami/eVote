@@ -3,8 +3,8 @@
 import { useState, useEffect } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Shield, Key, RefreshCw } from "lucide-react";
-import CryptographySettings from "@/components/CryptographySettings";
-import ChangePassword from "@/components/ChangePassword";
+import CryptographySettings from "@/components/Dashboard/CryptographySettings";
+import ChangePassword from "@/components/Dashboard/ChangePassword";
 
 export default function SettingsPage() {
   const [loading, setLoading] = useState(true);

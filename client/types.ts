@@ -1,19 +1,22 @@
+interface PollOption {
+  _id: string
+  text: string
+  votes: number
+}
 interface Poll {
-  _id: string;
-  title: string;
-  description: string;
-  options: Array<{
-    text: string;
-    votes: number;
-  }>;
+  _id: string
+  title: string
+  description: string
+  options: PollOption[]
   createdBy: {
-    _id: string;
-    username: string;
-  };
-  createdAt: string;
-  updatedAt: string;
-  isActive: boolean;
-  endDate?: string;
+    _id: string
+    username: string
+  }
+  createdAt: string
+  deadline?: string
+  isActive: boolean
+  hasVoted: boolean
+  userVote?: string
 }
 
 interface LoginResponse {

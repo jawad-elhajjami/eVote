@@ -1,5 +1,5 @@
 import React from 'react'
-import { Badge } from './ui/badge'
+import { Badge } from '../ui/badge'
 const AcademicContext = () => {
   return (
     <section className="py-20 px-4 bg-black/20">

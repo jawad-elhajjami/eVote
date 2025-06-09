@@ -1,11 +1,11 @@
-import Features from "@/components/Features"
-import Header from "@/components/Header"
-import TechStack from "@/components/TechStack"
-import AcademicContext from "@/components/AcademicContext"
-import CallToAction from "@/components/CallToAction"
-import Footer from "@/components/Footer"
-import HowItWorks from "@/components/HowItWorks"
-import HeroSection from "@/components/HeroSection"
+import Features from "@/components/LandingPage/Features"
+import Header from "@/components/LandingPage/Header"
+import TechStack from "@/components/LandingPage/TechStack"
+import AcademicContext from "@/components/LandingPage/AcademicContext"
+import CallToAction from "@/components/LandingPage/CallToAction"
+import Footer from "@/components/LandingPage/Footer"
+import HowItWorks from "@/components/LandingPage/HowItWorks"
+import HeroSection from "@/components/LandingPage/HeroSection"
 
 export default function Home() {
   return (
