@@ -337,10 +337,19 @@ const PollsPage = () => {
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-2">
-                        <button className="flex items-center text-sm text-blue-600 hover:text-blue-800">
-                          <Eye className="h-4 w-4 mr-1" />
-                          View
-                        </button>
+                        <Button
+                          variant="link"
+                          className="flex items-center text-sm text-blue-600 hover:text-blue-800"
+                          asChild
+                        >
+                          <Link
+                            href={`/dashboard/vote/${poll._id}`}
+                            className="flex items-center"
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            View
+                          </Link>
+                        </Button>
                         {isMyPoll(poll) && (
                           <>
                             <Link

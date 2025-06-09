@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { verifyToken, AuthRequest } from "../middleware/auth";
 import Poll from "../models/Poll";
+import mongoose from "mongoose";
 
 const router = Router();
 
@@ -144,6 +145,45 @@ router.put("/update/:id", verifyToken, async (req: AuthRequest, res: Response) =
   }
 });
 
+
+// GET /api/polls/:id
+router.get("/:id", async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid poll ID." });
+  }
+
+  try {
+    const poll = await Poll.findById(id)
+      .populate("createdBy", "username _id")
+      .lean();
+
+    if (!poll) {
+      return res.status(404).json({ message: "Poll not found." });
+    }
+
+    const formattedPoll = {
+      _id: poll._id.toString(),
+      title: poll.title,
+      description: poll.description,
+      createdBy: poll.createdBy,
+      createdAt: poll.createdAt.toISOString(),
+      updatedAt: poll.updatedAt?.toISOString() || poll.createdAt.toISOString(),
+      isActive: !poll.endDate || new Date(poll.endDate) > new Date(),
+      endDate: poll.endDate?.toISOString(),
+      options: poll.options.map((option: any) => ({ 
+        text: option.text,
+        votes: option.votes || 0 
+      }))
+    };
+
+    res.status(200).json(formattedPoll);
+  } catch (err) {
+    console.error("Error fetching poll:", err);
+    res.status(500).json({ message: "Server error fetching poll." });
+  }
+});
 
 
 export default router;

@@ -10,7 +10,7 @@ import {
 import { useRouter } from "next/navigation";
 
 interface AuthContextType {
-  user: { username: string; roles: string[] } | null;
+  user: { id: string; username: string; roles: string[] } | null;
   loading: boolean;
   login: (token: string) => void
   logout: () => void;
@@ -30,7 +30,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       });
       if (!res.ok) throw new Error("Unauthorized");
       const data = await res.json();
-      setUser({ username: data.username, roles: data.roles });
+      setUser({ id: data.id, username: data.username, roles: data.roles });
     } catch {
       logout();
     } finally {
