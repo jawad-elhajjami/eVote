@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth";
-import voteRoutes from "./routes/vote";
 import userRoutes from "./routes/user"
 import pollRoutes from "./routes/polls"
+import voteRoutes from "./routes/vote"
 import settingsRoutes from "./routes/settings"
 
 // Load environment variables
@@ -20,9 +20,9 @@ app.use(express.json());
 
 // Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/vote", voteRoutes);
 app.use("/api/users", userRoutes)
 app.use("/api/polls", pollRoutes)
+app.use("/api/polls", voteRoutes) // voting routes under polls
 app.use("/api/settings", settingsRoutes)
 
 
