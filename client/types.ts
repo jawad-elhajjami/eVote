@@ -1,22 +1,22 @@
 interface PollOption {
-  _id: string
-  text: string
-  votes: number
+  _id: string;
+  text: string;
+  votes: number;
 }
 interface Poll {
-  _id: string
-  title: string
-  description: string
-  options: PollOption[]
+  _id: string;
+  title: string;
+  description: string;
+  options: PollOption[];
   createdBy: {
-    _id: string
-    username: string
-  }
-  createdAt: string
-  deadline?: string
-  isActive: boolean
-  hasVoted: boolean
-  userVote?: string
+    _id: string;
+    username: string;
+  };
+  createdAt: string;
+  deadline?: string;
+  isActive: boolean;
+  hasVoted: boolean;
+  userVote?: string;
 }
 
 interface LoginResponse {
@@ -28,8 +28,14 @@ interface LoginResponse {
   };
 }
 interface CryptographySettings {
-  keyPairGenerated: boolean
-  publicKey: string
-  keyStrength: string
-  lastKeyRotation: string
+  keyPairGenerated: boolean;
+  publicKey: string;
+  keyStrength: string;
+  lastKeyRotation: string;
+}
+
+interface VoteSuccess {
+  receipt: string;
+  hash: string;
+  signature?: string;
 }
