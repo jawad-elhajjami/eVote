@@ -98,9 +98,6 @@ export default function VotePage() {
       if (!response.ok) {
         // Debug: log the response to see what we're actually getting
         const responseText = await response.text();
-        console.log("Response status:", response.status);
-        console.log("Response text:", responseText);
-
         // Try to parse as JSON, fallback to text if it fails
         let errorMessage = "Failed to submit vote";
         try {
@@ -118,6 +115,7 @@ export default function VotePage() {
 
       // Show success message with receipt information
       setVoteSuccess({
+        option: result.option,
         receipt: result.receipt || "N/A",
         hash,
         signature,

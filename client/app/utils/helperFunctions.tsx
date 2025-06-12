@@ -35,6 +35,7 @@ export const downloadReceipt = (voteSuccess: VoteSuccess) => {
   const content = `
 eVote Receipt
 ===============
+Option : ${voteSuccess.option}
 Receipt ID: ${voteSuccess.receipt}
 Vote Hash: ${voteSuccess.hash}
 Date: ${new Date().toLocaleString()}

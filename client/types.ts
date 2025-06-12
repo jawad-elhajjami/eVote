@@ -35,6 +35,7 @@ interface CryptographySettings {
 }
 
 interface VoteSuccess {
+  option: string;
   receipt: string;
   hash: string;
   signature?: string;
