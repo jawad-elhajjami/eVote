@@ -100,7 +100,7 @@ router.get("/:id", verifyToken, async (req: AuthRequest, res: Response) => {
       description: poll.description,
       options: poll.options,
       endDate: poll.endDate,
-      isActive: !poll.endDate || new Date(poll.endDate) > new Date(),
+      isActive: poll.isActive,
       createdBy: poll.createdBy,
       createdAt: poll.createdAt,
       updatedAt: poll.updatedAt,
@@ -113,7 +113,7 @@ router.get("/:id", verifyToken, async (req: AuthRequest, res: Response) => {
 
 // PUT /update/:id - Update a specific poll by ID
 router.put("/update/:id", verifyToken, async (req: AuthRequest, res: Response) => {
-  const { title, description, options, endDate } = req.body;
+  const { title, description, options, isActive, endDate } = req.body;
 
   if (!title || !options || options.length < 2) {
     return res.status(400).json({ message: "Title and at least two options are required." });
@@ -134,6 +134,7 @@ router.put("/update/:id", verifyToken, async (req: AuthRequest, res: Response) =
     poll.title = title;
     poll.description = description;
     poll.endDate = endDate || null;
+    poll.isActive = isActive;
     poll.options = options.map((text: string) => ({ text, votes: 0 })); // Optionally preserve votes
 
     await poll.save();

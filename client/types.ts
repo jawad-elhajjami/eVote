@@ -40,3 +40,23 @@ interface VoteSuccess {
   hash: string;
   signature?: string;
 }
+
+interface PollResultsData {
+  pollId: string;
+  title: string;
+  description: string;
+  totalVotes: number;
+  results: PollResult[];
+  isActive: boolean;
+  endDate?: string;
+  createdBy: {
+    _id: string;
+    username: string;
+  };
+}
+interface PollResult {
+  text: string;
+  votes: number;
+  percentage: string; // Assuming percentage is a string like "75.00"
+}
+

@@ -31,7 +31,7 @@ router.post(
       }
 
       // Check if poll is still active (not expired)
-      if (poll.endDate && new Date(poll.endDate) < new Date()) {
+      if (!poll.isActive || poll.endDate && new Date(poll.endDate) < new Date()) {
         return res.status(400).json({ message: "This poll has ended." });
       }
 
@@ -119,6 +119,7 @@ router.post(
       // Return success response with receipt
       res.status(201).json({
         message: "Vote submitted successfully!",
+        option,
         receipt,
         hash,
         voteId: vote._id,
@@ -195,6 +196,32 @@ router.get("/:id/results", async (req, res) => {
       return res.status(404).json({ message: "Poll not found." });
     }
 
+    // Access control checks
+    const now = new Date();
+    const endDate = poll.endDate ? new Date(poll.endDate) : null;
+
+    // Check if poll has ended
+    const hasEnded = endDate ? now >= endDate : false;
+
+    // Check if poll is completed
+    const isCompleted = poll.isActive || false;
+
+    // Deny access if poll hasn't ended AND isn't completed
+    if (!hasEnded && !isCompleted) {
+      return res.status(403).json({
+        message:
+          "Results are not available yet. This poll is still active and has not reached its deadline.",
+      });
+    }
+
+    // If poll has ended but isn't marked as completed, still deny access
+    if (hasEnded && !isCompleted) {
+      return res.status(403).json({
+        message:
+          "Results are not available yet. This poll has not been marked as completed by an administrator.",
+      });
+    }
+
     // Get total vote count
     const totalVotes = await Vote.countDocuments({ poll: pollId });
 
@@ -215,6 +242,7 @@ router.get("/:id/results", async (req, res) => {
       totalVotes,
       results,
       isActive: !poll.endDate || new Date(poll.endDate) > new Date(),
+      isCompleted: poll.isActive || false,
       endDate: poll.endDate,
       createdBy: poll.createdBy,
     });

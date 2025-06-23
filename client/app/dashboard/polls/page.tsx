@@ -346,8 +346,8 @@ const PollsPage = () => {
                             href={`/dashboard/vote/${poll._id}`}
                             className="flex items-center"
                           >
-                            <Eye className="h-4 w-4 mr-1" />
-                            View
+                            <Eye className="h-4 w-4" />
+                            Vote
                           </Link>
                         </Button>
                         {isMyPoll(poll) && (

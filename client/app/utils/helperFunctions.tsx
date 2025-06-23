@@ -52,3 +52,4 @@ Keep this receipt to verify your vote in the future.
   link.click();
   document.body.removeChild(link);
 };
+

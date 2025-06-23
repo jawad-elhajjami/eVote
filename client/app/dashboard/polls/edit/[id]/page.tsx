@@ -1,128 +1,147 @@
-"use client"
+"use client";
 
-import type React from "react"
+import type React from "react";
 
-import { useState, useEffect } from "react"
-import { useRouter, useParams } from "next/navigation"
-import { Plus, ArrowLeft, Loader2 } from "lucide-react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
+import { Plus, ArrowLeft, Loader2 } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { Checkbox } from "@/components/ui/checkbox";
 
 export default function EditPollPage() {
-  const router = useRouter()
-  const params = useParams()
-  const pollId = params.id as string
+  const router = useRouter();
+  const params = useParams();
+  const pollId = params.id as string;
 
-  const [loading, setLoading] = useState(true)
-  const [saving, setSaving] = useState(false)
-  const [error, setError] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const [title, setTitle] = useState("")
-  const [description, setDescription] = useState("")
-  const [endDate, setEndDate] = useState("")
-  const [options, setOptions] = useState<string[]>(["", ""])
+  const [title, setTitle] = useState("");
+  const [description, setDescription] = useState("");
+  const [endDate, setEndDate] = useState("");
+  const [options, setOptions] = useState<string[]>(["", ""]);
+
+  const [active, setActive] = useState(true);
 
   useEffect(() => {
-    fetchPoll()
-  }, [pollId])
+    fetchPoll();
+  }, [pollId]);
 
   const fetchPoll = async () => {
     try {
-      setLoading(true)
-      setError(null)
+      setLoading(true);
+      setError(null);
 
-      const token = localStorage.getItem("token") || sessionStorage.getItem("token")
+      const token =
+        localStorage.getItem("token") || sessionStorage.getItem("token");
 
-      const response = await fetch(`http://localhost:3001/api/polls/${pollId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      })
+      const response = await fetch(
+        `http://localhost:3001/api/polls/${pollId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
 
       if (!response.ok) {
-        throw new Error(`Failed to fetch poll: ${response.status}`)
+        throw new Error(`Failed to fetch poll: ${response.status}`);
       }
 
-      const poll: Poll = await response.json()
+      const poll: Poll = await response.json();
 
       // Populate form with existing data
-      setTitle(poll.title)
-      setDescription(poll.description)
-      setEndDate(poll.endDate ? new Date(poll.endDate).toISOString().slice(0, 16) : "")
-      setOptions(poll.options.map((option) => option.text))
+      setTitle(poll.title);
+      setDescription(poll.description);
+      setActive(poll.isActive ? true : false);
+      setEndDate(
+        poll.endDate ? new Date(poll.endDate).toISOString().slice(0, 16) : ""
+      );
+      setOptions(poll.options.map((option) => option.text));
     } catch (err) {
-      console.error("Error fetching poll:", err)
-      setError(err instanceof Error ? err.message : "Failed to fetch poll")
+      console.error("Error fetching poll:", err);
+      setError(err instanceof Error ? err.message : "Failed to fetch poll");
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const handleOptionChange = (index: number, value: string) => {
-    const updated = [...options]
-    updated[index] = value
-    setOptions(updated)
+    const updated = [...options];
+    updated[index] = value;
+    setOptions(updated);
+  };
+
+  const handleIsActiveChange = (checked: boolean) => {
+    setActive(checked);
   }
 
-  const addOption = () => setOptions([...options, ""])
+  const addOption = () => setOptions([...options, ""]);
 
   const removeOption = (index: number) => {
-    if (options.length <= 2) return
-    setOptions(options.filter((_, i) => i !== index))
-  }
+    if (options.length <= 2) return;
+    setOptions(options.filter((_, i) => i !== index));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+    e.preventDefault();
 
     // Validate form
     if (!title.trim()) {
-      alert("Title is required")
-      return
+      alert("Title is required");
+      return;
     }
 
-    const validOptions = options.filter((opt) => opt.trim() !== "")
+    const validOptions = options.filter((opt) => opt.trim() !== "");
     if (validOptions.length < 2) {
-      alert("At least 2 options are required")
-      return
+      alert("At least 2 options are required");
+      return;
     }
 
     try {
-      setSaving(true)
-      const token = localStorage.getItem("token") || sessionStorage.getItem("token")
+      setSaving(true);
+      const token =
+        localStorage.getItem("token") || sessionStorage.getItem("token");
 
-      const response = await fetch(`http://localhost:3001/api/polls/update/${pollId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          title: title.trim(),
-          description: description.trim(),
-          options: validOptions,
-          endDate: endDate || null,
-        }),
-      })
+      const response = await fetch(
+        `http://localhost:3001/api/polls/update/${pollId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            title: title.trim(),
+            description: description.trim(),
+            options: validOptions,
+            isActive: active,
+            endDate: endDate || null,
+          }),
+        }
+      );
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(data.message || "Failed to update poll")
+        throw new Error(data.message || "Failed to update poll");
       }
 
-      alert("Poll updated successfully!")
-      router.push("/dashboard/polls")
+      alert("Poll updated successfully!");
+      router.push("/dashboard/polls");
     } catch (err: any) {
-      console.error("Error updating poll:", err)
-      alert(err.message || "Something went wrong.")
+      console.error("Error updating poll:", err);
+      alert(err.message || "Something went wrong.");
     } finally {
-      setSaving(false)
+      setSaving(false);
     }
-  }
+  };
 
   if (loading) {
     return (
@@ -132,7 +151,7 @@ export default function EditPollPage() {
           <span className="ml-2 text-gray-600">Loading poll...</span>
         </div>
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -150,7 +169,9 @@ export default function EditPollPage() {
               </svg>
             </div>
             <div className="ml-3">
-              <h3 className="text-sm font-medium text-red-800">Error loading poll</h3>
+              <h3 className="text-sm font-medium text-red-800">
+                Error loading poll
+              </h3>
               <p className="text-sm text-red-700 mt-1">{error}</p>
             </div>
           </div>
@@ -161,14 +182,17 @@ export default function EditPollPage() {
           </div>
         </div>
       </div>
-    )
+    );
   }
 
   return (
     <div className="p-6">
       {/* Back Button */}
       <div className="mb-6">
-        <Link href="/dashboard/polls" className="inline-flex items-center text-gray-600 hover:text-gray-800">
+        <Link
+          href="/dashboard/polls"
+          className="inline-flex items-center text-gray-600 hover:text-gray-800"
+        >
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to Polls
         </Link>
@@ -204,7 +228,9 @@ export default function EditPollPage() {
             </div>
 
             <div>
-              <Label className="text-black mb-2 block">Deadline (Optional)</Label>
+              <Label className="text-black mb-2 block">
+                Deadline (Optional)
+              </Label>
               <Input
                 type="datetime-local"
                 value={endDate}
@@ -239,9 +265,35 @@ export default function EditPollPage() {
                   )}
                 </div>
               ))}
-              <Button type="button" variant="outline" className="mt-2" onClick={addOption} disabled={saving}>
+              <Button
+                type="button"
+                variant="outline"
+                className="mt-2"
+                onClick={addOption}
+                disabled={saving}
+              >
                 <Plus className="w-4 h-4 mr-1" /> Add Option
               </Button>
+            </div>
+
+            {/* isActive Checkbox */}
+            <div className="flex items-center">
+              <Label className="hover:bg-accent/50 flex items-start gap-3 rounded-lg border p-3 has-[[aria-checked=true]]:border-blue-600 has-[[aria-checked=true]]:bg-blue-50 dark:has-[[aria-checked=true]]:border-blue-900 dark:has-[[aria-checked=true]]:bg-blue-950 w-full">
+                <Checkbox
+                  id="toggle-2"
+                  className="data-[state=checked]:border-blue-600 data-[state=checked]:bg-blue-600 data-[state=checked]:text-white dark:data-[state=checked]:border-blue-700 dark:data-[state=checked]:bg-blue-700"
+                  checked={active}
+                  onCheckedChange={(val) => setActive(!!val)}
+                />
+                <div className="grid gap-1.5 font-normal">
+                  <p className="text-sm leading-none font-medium">
+                    Activate Poll
+                  </p>
+                  <p className="text-muted-foreground text-sm">
+                    You can toggle this to make the poll active or inactive. An inactive poll will not accept votes.
+                  </p>
+                </div>
+              </Label>
             </div>
 
             <div className="flex gap-4">
@@ -269,5 +321,5 @@ export default function EditPollPage() {
         </CardContent>
       </Card>
     </div>
-  )
+  );
 }
