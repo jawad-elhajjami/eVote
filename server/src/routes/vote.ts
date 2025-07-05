@@ -134,54 +134,6 @@ router.post(
   }
 );
 
-// GET /api/polls/:id/verify-vote - Verify if a vote exists (for receipt verification)
-router.get(
-  "/:id/verify-vote",
-  verifyToken,
-  async (req: AuthRequest, res: Response) => {
-    const pollId = req.params.id;
-    const { receipt, hash } = req.query;
-    const userId = req.user?.userId;
-
-    try {
-      if (!receipt || !hash) {
-        return res.status(400).json({
-          message: "Receipt and hash are required for verification.",
-        });
-      }
-
-      // Find the vote with matching receipt and hash
-      const vote = await Vote.findOne({
-        poll: pollId,
-        user: userId,
-        receipt: receipt as string,
-        hash: hash as string,
-      }).populate("poll", "title");
-
-      if (!vote) {
-        return res.status(404).json({
-          message: "Vote not found with provided receipt and hash.",
-        });
-      }
-
-      res.status(200).json({
-        message: "Vote verified successfully!",
-        vote: {
-          option: vote.option,
-          timestamp: vote.createdAt,
-          receipt: vote.receipt,
-          hash: vote.hash,
-          pollTitle: vote.poll?.title || "Unknown Poll",
-        },
-      });
-    } catch (error) {
-      console.error("Error verifying vote:", error);
-      res.status(500).json({
-        message: "Internal server error while verifying vote.",
-      });
-    }
-  }
-);
 
 // GET /api/polls/:id/results - Get poll results (public endpoint)
 router.get("/:id/results", async (req, res) => {
@@ -253,5 +205,7 @@ router.get("/:id/results", async (req, res) => {
     });
   }
 });
+
+
 
 export default router;

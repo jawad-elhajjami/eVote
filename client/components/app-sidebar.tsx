@@ -10,6 +10,7 @@ import {
   Settings,
   LogOut,
   Vote,
+  Verified,
   PlusCircle,
 } from "lucide-react"
 
@@ -39,6 +40,11 @@ const items = [
     title: "View polls",
     url: "/dashboard/polls",
     icon: Vote,
+  },
+  {
+    title: "Verify votes",
+    url: "/dashboard/verify",
+    icon: Verified,
   },
   {
     title: "Settings",

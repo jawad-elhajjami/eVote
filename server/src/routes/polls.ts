@@ -1,6 +1,7 @@
 import { Router, Request, Response } from "express";
 import { verifyToken, AuthRequest } from "../middleware/auth";
 import Poll from "../models/Poll";
+import Vote from "../models/Vote";
 import mongoose from "mongoose";
 
 const router = Router();
@@ -78,6 +79,8 @@ router.delete("/delete/:id", verifyToken, async (req: AuthRequest, res: Response
     }
 
     await Poll.findByIdAndDelete(pollId);
+    // delete all votes associated with this poll if needed
+    await Vote.deleteMany({ poll: pollId }); 
     res.status(200).json({ message: "Poll deleted successfully." });
   } catch (err) {
     console.error(err);
@@ -86,30 +89,30 @@ router.delete("/delete/:id", verifyToken, async (req: AuthRequest, res: Response
 });
 
 // GET /:id - Fetch a specific poll by ID
-router.get("/:id", verifyToken, async (req: AuthRequest, res: Response) => {
-  try {
-    const poll = await Poll.findById(req.params.id).populate("createdBy", "username _id");
+// router.get("/:id", verifyToken, async (req: AuthRequest, res: Response) => {
+//   try {
+//     const poll = await Poll.findById(req.params.id).populate("createdBy", "username _id");
 
-    if (!poll) {
-      return res.status(404).json({ message: "Poll not found." });
-    }
+//     if (!poll) {
+//       return res.status(404).json({ message: "Poll not found." });
+//     }
 
-    res.status(200).json({
-      _id: poll._id,
-      title: poll.title,
-      description: poll.description,
-      options: poll.options,
-      endDate: poll.endDate,
-      isActive: poll.isActive,
-      createdBy: poll.createdBy,
-      createdAt: poll.createdAt,
-      updatedAt: poll.updatedAt,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Failed to fetch poll." });
-  }
-});
+//     res.status(200).json({
+//       _id: poll._id,
+//       title: poll.title,
+//       description: poll.description,
+//       options: poll.options,
+//       endDate: poll.endDate,
+//       isActive: poll.isActive,
+//       createdBy: poll.createdBy,
+//       createdAt: poll.createdAt,
+//       updatedAt: poll.updatedAt,
+//     });
+//   } catch (err) {
+//     console.error(err);
+//     res.status(500).json({ message: "Failed to fetch poll." });
+//   }
+// });
 
 // PUT /update/:id - Update a specific poll by ID
 router.put("/update/:id", verifyToken, async (req: AuthRequest, res: Response) => {

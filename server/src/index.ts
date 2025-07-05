@@ -6,6 +6,7 @@ import authRoutes from "./routes/auth";
 import userRoutes from "./routes/user";
 import pollRoutes from "./routes/polls";
 import voteRoutes from "./routes/vote";
+import verifyRoutes from "./routes/verify";
 import settingsRoutes from "./routes/settings";
 import { repairVoteCounts } from "./repair";
 
@@ -24,6 +25,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/polls", pollRoutes);
 app.use("/api/polls", voteRoutes); // voting routes under polls
+app.use("/api/verify", verifyRoutes);
 app.use("/api/settings", settingsRoutes);
 
 // MongoDB Connection

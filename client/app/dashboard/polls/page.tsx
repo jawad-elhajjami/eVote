@@ -362,7 +362,7 @@ const PollsPage = () => {
                             <button
                               onClick={() => deletePoll(poll._id)}
                               disabled={deletingPollId === poll._id}
-                              className="flex items-center text-sm text-red-600 hover:text-red-800 disabled:opacity-50 disabled:cursor-not-allowed"
+                              className="flex items-center text-sm text-red-600 hover:text-red-800 disabled:opacity-50 cursor-pointer disabled:cursor-not-allowed"
                             >
                               {deletingPollId === poll._id ? (
                                 <RefreshCw className="h-4 w-4 mr-1 animate-spin" />
@@ -376,6 +376,17 @@ const PollsPage = () => {
                           </>
                         )}
                       </div>
+                    </td>
+                    <td>
+                    <Button
+                          asChild
+                        >
+                          <Link
+                            href={`/dashboard/polls/results/${poll._id}`}
+                            className="flex items-center text-sm">
+                              View Results
+                            </Link>
+                        </Button>
                     </td>
                   </tr>
                 ))}

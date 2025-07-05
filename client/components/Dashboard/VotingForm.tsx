@@ -107,9 +107,6 @@ const VotingForm: React.FC<VotingFormProps> = ({ pollId, title, options, userId,
         userId
       });
 
-      console.log("Vote data to be signed:", voteData);
-      console.log("Private key file size:", privateKeyContent.length);
-
       // Sign the vote data
       const signature = await signVoteData(voteData, privateKeyContent);
       console.log("Generated signature:", signature ? "present" : "missing");

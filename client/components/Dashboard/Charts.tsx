@@ -39,7 +39,7 @@ export default function Charts({results}:{results: PollResultsData}) {
   }))
   return (
     <div className="lg:col-span-2">
-      <Card className="bg-white border-gray-100 shadow h-full ">
+      <Card className="bg-white border-gray-100 shadow h-full overflow-scroll">
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="text-gray-800">Vote Distribution</CardTitle>

@@ -45,7 +45,7 @@ export default function PollResultsPage() {
       if (!response.ok) {
         throw new Error(`Failed to fetch results: ${response.status}`);
       }
-
+      
       const data = await response.json();
       setResults(data);
     } catch (error) {
